@@ -1,6 +1,6 @@
 # coding: utf-8
 import sys, os
-sys.path.append(os.pardir)  # ë¶€ëª¨ ë””ë ‰í„°ë¦¬ì˜ íŒŒì¼ì„ ê°€ì ¸ì˜¬ ìˆ˜ ìˆë„ë¡ ì„¤ì •
+sys.path.append(os.pardir)  # ë¶?ëª? ?””? ‰?„°ë¦¬ì˜ ?ŒŒ?¼?„ ê°?? ¸?˜¬ ?ˆ˜ ?ˆ?„ë¡? ?„¤? •
 import numpy as np
 from collections import OrderedDict
 from common.layers import *
@@ -8,18 +8,18 @@ from common.gradient import numerical_gradient
 
 
 class MultiLayerNet:
-    """ì™„ì „ì—°ê²° ë‹¤ì¸µ ì‹ ê²½ë§
+    """?™„? „?—°ê²? ?‹¤ì¸? ?‹ ê²½ë§
 
     Parameters
     ----------
-    input_size : ì…ë ¥ í¬ê¸°ï¼ˆMNISTì˜ ê²½ìš°ì—” 784ï¼‰
-    hidden_size_list : ê° ì€ë‹‰ì¸µì˜ ë‰´ëŸ° ìˆ˜ë¥¼ ë‹´ì€ ë¦¬ìŠ¤íŠ¸ï¼ˆe.g. [100, 100, 100]ï¼‰
-    output_size : ì¶œë ¥ í¬ê¸°ï¼ˆMNISTì˜ ê²½ìš°ì—” 10ï¼‰
-    activation : í™œì„±í™” í•¨ìˆ˜ - 'relu' í˜¹ì€ 'sigmoid'
-    weight_init_std : ê°€ì¤‘ì¹˜ì˜ í‘œì¤€í¸ì°¨ ì§€ì •ï¼ˆe.g. 0.01ï¼‰
-        'relu'ë‚˜ 'he'ë¡œ ì§€ì •í•˜ë©´ 'He ì´ˆê¹ƒê°’'ìœ¼ë¡œ ì„¤ì •
-        'sigmoid'ë‚˜ 'xavier'ë¡œ ì§€ì •í•˜ë©´ 'Xavier ì´ˆê¹ƒê°’'ìœ¼ë¡œ ì„¤ì •
-    weight_decay_lambda : ê°€ì¤‘ì¹˜ ê°ì†Œ(L2 ë²•ì¹™)ì˜ ì„¸ê¸°
+    input_size : ?…? ¥ ?¬ê¸°ï¼ˆMNIST?˜ ê²½ìš°?—” 784ï¼?
+    hidden_size_list : ê°? ????‹‰ì¸µì˜ ?‰´?Ÿ° ?ˆ˜ë¥? ?‹´??? ë¦¬ìŠ¤?Š¸ï¼ˆe.g. [100, 100, 100]ï¼?
+    output_size : ì¶œë ¥ ?¬ê¸°ï¼ˆMNIST?˜ ê²½ìš°?—” 10ï¼?
+    activation : ?™œ?„±?™” ?•¨?ˆ˜ - 'relu' ?˜¹??? 'sigmoid'
+    weight_init_std : ê°?ì¤‘ì¹˜?˜ ?‘œì¤??¸ì°? ì§?? •ï¼ˆe.g. 0.01ï¼?
+        'relu'?‚˜ 'he'ë¡? ì§?? •?•˜ë©? 'He ì´ˆê¹ƒê°?'?œ¼ë¡? ?„¤? •
+        'sigmoid'?‚˜ 'xavier'ë¡? ì§?? •?•˜ë©? 'Xavier ì´ˆê¹ƒê°?'?œ¼ë¡? ?„¤? •
+    weight_decay_lambda : ê°?ì¤‘ì¹˜ ê°ì†Œ(L2 ë²•ì¹™)?˜ ?„¸ê¸?
     """
     def __init__(self, input_size, hidden_size_list, output_size,
                  activation='relu', weight_init_std='relu', weight_decay_lambda=0):
@@ -30,10 +30,10 @@ class MultiLayerNet:
         self.weight_decay_lambda = weight_decay_lambda
         self.params = {}
 
-        # ê°€ì¤‘ì¹˜ ì´ˆê¸°í™”
+        # ê°?ì¤‘ì¹˜ ì´ˆê¸°?™”
         self.__init_weight(weight_init_std)
 
-        # ê³„ì¸µ ìƒì„±
+        # ê³„ì¸µ ?ƒ?„±
         activation_layer = {'sigmoid': Sigmoid, 'relu': Relu}
         self.layers = OrderedDict()
         for idx in range(1, self.hidden_layer_num+1):
@@ -48,21 +48,21 @@ class MultiLayerNet:
         self.last_layer = SoftmaxWithLoss()
 
     def __init_weight(self, weight_init_std):
-        """ê°€ì¤‘ì¹˜ ì´ˆê¸°í™”
+        """ê°?ì¤‘ì¹˜ ì´ˆê¸°?™”
         
         Parameters
         ----------
-        weight_init_std : ê°€ì¤‘ì¹˜ì˜ í‘œì¤€í¸ì°¨ ì§€ì •ï¼ˆe.g. 0.01ï¼‰
-            'relu'ë‚˜ 'he'ë¡œ ì§€ì •í•˜ë©´ 'He ì´ˆê¹ƒê°’'ìœ¼ë¡œ ì„¤ì •
-            'sigmoid'ë‚˜ 'xavier'ë¡œ ì§€ì •í•˜ë©´ 'Xavier ì´ˆê¹ƒê°’'ìœ¼ë¡œ ì„¤ì •
+        weight_init_std : ê°?ì¤‘ì¹˜?˜ ?‘œì¤??¸ì°? ì§?? •ï¼ˆe.g. 0.01ï¼?
+            'relu'?‚˜ 'he'ë¡? ì§?? •?•˜ë©? 'He ì´ˆê¹ƒê°?'?œ¼ë¡? ?„¤? •
+            'sigmoid'?‚˜ 'xavier'ë¡? ì§?? •?•˜ë©? 'Xavier ì´ˆê¹ƒê°?'?œ¼ë¡? ?„¤? •
         """
         all_size_list = [self.input_size] + self.hidden_size_list + [self.output_size]
         for idx in range(1, len(all_size_list)):
             scale = weight_init_std
             if str(weight_init_std).lower() in ('relu', 'he'):
-                scale = np.sqrt(2.0 / all_size_list[idx - 1])  # ReLUë¥¼ ì‚¬ìš©í•  ë•Œì˜ ê¶Œì¥ ì´ˆê¹ƒê°’
+                scale = np.sqrt(2.0 / all_size_list[idx - 1])  # ReLUë¥? ?‚¬?š©?•  ?•Œ?˜ ê¶Œì¥ ì´ˆê¹ƒê°?
             elif str(weight_init_std).lower() in ('sigmoid', 'xavier'):
-                scale = np.sqrt(1.0 / all_size_list[idx - 1])  # sigmoidë¥¼ ì‚¬ìš©í•  ë•Œì˜ ê¶Œì¥ ì´ˆê¹ƒê°’
+                scale = np.sqrt(1.0 / all_size_list[idx - 1])  # sigmoidë¥? ?‚¬?š©?•  ?•Œ?˜ ê¶Œì¥ ì´ˆê¹ƒê°?
             self.params['W' + str(idx)] = scale * np.random.randn(all_size_list[idx-1], all_size_list[idx])
             self.params['b' + str(idx)] = np.zeros(all_size_list[idx])
 
@@ -73,16 +73,16 @@ class MultiLayerNet:
         return x
 
     def loss(self, x, t):
-        """ì†ì‹¤ í•¨ìˆ˜ë¥¼ êµ¬í•œë‹¤.
+        """?†?‹¤ ?•¨?ˆ˜ë¥? êµ¬í•œ?‹¤.
         
         Parameters
         ----------
-        x : ì…ë ¥ ë°ì´í„°
-        t : ì •ë‹µ ë ˆì´ë¸” 
+        x : ?…? ¥ ?°?´?„°
+        t : ? •?‹µ ? ˆ?´ë¸? 
         
         Returns
         -------
-        ì†ì‹¤ í•¨ìˆ˜ì˜ ê°’
+        ?†?‹¤ ?•¨?ˆ˜?˜ ê°?
         """
         y = self.predict(x)
 
@@ -102,18 +102,18 @@ class MultiLayerNet:
         return accuracy
 
     def numerical_gradient(self, x, t):
-        """ê¸°ìš¸ê¸°ë¥¼ êµ¬í•œë‹¤(ìˆ˜ì¹˜ ë¯¸ë¶„).
+        """ê¸°ìš¸ê¸°ë?? êµ¬í•œ?‹¤(?ˆ˜ì¹? ë¯¸ë¶„).
         
         Parameters
         ----------
-        x : ì…ë ¥ ë°ì´í„°
-        t : ì •ë‹µ ë ˆì´ë¸”
+        x : ?…? ¥ ?°?´?„°
+        t : ? •?‹µ ? ˆ?´ë¸?
         
         Returns
         -------
-        ê° ì¸µì˜ ê¸°ìš¸ê¸°ë¥¼ ë‹´ì€ ë”•ì…”ë„ˆë¦¬(dictionary) ë³€ìˆ˜
-            grads['W1']ã€grads['W2']ã€... ê° ì¸µì˜ ê°€ì¤‘ì¹˜
-            grads['b1']ã€grads['b2']ã€... ê° ì¸µì˜ í¸í–¥
+        ê°? ì¸µì˜ ê¸°ìš¸ê¸°ë?? ?‹´??? ?”•?…”?„ˆë¦?(dictionary) ë³??ˆ˜
+            grads['W1']??grads['W2']???... ê°? ì¸µì˜ ê°?ì¤‘ì¹˜
+            grads['b1']??grads['b2']???... ê°? ì¸µì˜ ?¸?–¥
         """
         loss_W = lambda W: self.loss(x, t)
 
@@ -125,18 +125,18 @@ class MultiLayerNet:
         return grads
 
     def gradient(self, x, t):
-        """ê¸°ìš¸ê¸°ë¥¼ êµ¬í•œë‹¤(ì˜¤ì°¨ì—­ì „íŒŒë²•).
+        """ê¸°ìš¸ê¸°ë?? êµ¬í•œ?‹¤(?˜¤ì°¨ì—­? „?ŒŒë²?).
 
         Parameters
         ----------
-        x : ì…ë ¥ ë°ì´í„°
-        t : ì •ë‹µ ë ˆì´ë¸”
+        x : ?…? ¥ ?°?´?„°
+        t : ? •?‹µ ? ˆ?´ë¸?
         
         Returns
         -------
-        ê° ì¸µì˜ ê¸°ìš¸ê¸°ë¥¼ ë‹´ì€ ë”•ì…”ë„ˆë¦¬(dictionary) ë³€ìˆ˜
-            grads['W1']ã€grads['W2']ã€... ê° ì¸µì˜ ê°€ì¤‘ì¹˜
-            grads['b1']ã€grads['b2']ã€... ê° ì¸µì˜ í¸í–¥
+        ê°? ì¸µì˜ ê¸°ìš¸ê¸°ë?? ?‹´??? ?”•?…”?„ˆë¦?(dictionary) ë³??ˆ˜
+            grads['W1']??grads['W2']???... ê°? ì¸µì˜ ê°?ì¤‘ì¹˜
+            grads['b1']??grads['b2']???... ê°? ì¸µì˜ ?¸?–¥
         """
         # forward
         self.loss(x, t)
@@ -150,7 +150,7 @@ class MultiLayerNet:
         for layer in layers:
             dout = layer.backward(dout)
 
-        # ê²°ê³¼ ì €ì¥
+        # ê²°ê³¼ ????¥
         grads = {}
         for idx in range(1, self.hidden_layer_num+2):
             grads['W' + str(idx)] = self.layers['Affine' + str(idx)].dW + self.weight_decay_lambda * self.layers['Affine' + str(idx)].W
