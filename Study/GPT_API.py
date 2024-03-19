@@ -5,7 +5,7 @@ import time
 openai.api_key = "${apikey}"
 
 messages = []
-predefined_messages = ['앞으로 실연당한 사람처럼 슬프게 대답해봐']
+predefined_messages = []
 
 for msg in predefined_messages:
     messages.append({"role": "user", "content": msg})
