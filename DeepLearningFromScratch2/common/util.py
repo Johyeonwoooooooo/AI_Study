@@ -24,11 +24,11 @@ def preprocess(text):
 
 
 def cos_similarity(x, y, eps=1e-8):
-    '''코사인 유사도 산출
+    '''肄붿궗�씤 �쑀�궗�룄 �궛異�
 
-    :param x: 벡터
-    :param y: 벡터
-    :param eps: '0으로 나누기'를 방지하기 위한 작은 값
+    :param x: 踰≫꽣
+    :param y: 踰≫꽣
+    :param eps: '0�쑝濡� �굹�늻湲�'瑜� 諛⑹���븯湲� �쐞�븳 �옉��� 媛�
     :return:
     '''
     nx = x / (np.sqrt(np.sum(x ** 2)) + eps)
@@ -37,30 +37,30 @@ def cos_similarity(x, y, eps=1e-8):
 
 
 def most_similar(query, word_to_id, id_to_word, word_matrix, top=5):
-    '''유사 단어 검색
+    '''�쑀�궗 �떒�뼱 寃��깋
 
-    :param query: 쿼리(텍스트)
-    :param word_to_id: 단어에서 단어 ID로 변환하는 딕셔너리
-    :param id_to_word: 단어 ID에서 단어로 변환하는 딕셔너리
-    :param word_matrix: 단어 벡터를 정리한 행렬. 각 행에 해당 단어 벡터가 저장되어 있다고 가정한다.
-    :param top: 상위 몇 개까지 출력할 지 지정
+    :param query: 荑쇰━(�뀓�뒪�듃)
+    :param word_to_id: �떒�뼱�뿉�꽌 �떒�뼱 ID濡� 蹂��솚�븯�뒗 �뵓�뀛�꼫由�
+    :param id_to_word: �떒�뼱 ID�뿉�꽌 �떒�뼱濡� 蹂��솚�븯�뒗 �뵓�뀛�꼫由�
+    :param word_matrix: �떒�뼱 踰≫꽣瑜� �젙由ы븳 �뻾�젹. 媛� �뻾�뿉 �빐�떦 �떒�뼱 踰≫꽣媛� ����옣�릺�뼱 �엳�떎怨� 媛��젙�븳�떎.
+    :param top: �긽�쐞 紐� 媛쒓퉴吏� 異쒕젰�븷 吏� 吏��젙
     '''
     if query not in word_to_id:
-        print('%s(을)를 찾을 수 없습니다.' % query)
+        print('%s(�쓣)瑜� 李얠쓣 �닔 �뾾�뒿�땲�떎.' % query)
         return
 
     print('\n[query] ' + query)
     query_id = word_to_id[query]
     query_vec = word_matrix[query_id]
 
-    # 코사인 유사도 계산
+    # 肄붿궗�씤 �쑀�궗�룄 怨꾩궛
     vocab_size = len(id_to_word)
 
     similarity = np.zeros(vocab_size)
     for i in range(vocab_size):
         similarity[i] = cos_similarity(word_matrix[i], query_vec)
 
-    # 코사인 유사도를 기준으로 내림차순으로 출력
+    # 肄붿궗�씤 �쑀�궗�룄瑜� 湲곗���쑝濡� �궡由쇱감�닚�쑝濡� 異쒕젰
     count = 0
     for i in (-1 * similarity).argsort():
         if id_to_word[i] == query:
@@ -73,11 +73,11 @@ def most_similar(query, word_to_id, id_to_word, word_matrix, top=5):
 
 
 def convert_one_hot(corpus, vocab_size):
-    '''원핫 표현으로 변환
+    '''�썝�빂 �몴�쁽�쑝濡� 蹂��솚
 
-    :param corpus: 단어 ID 목록(1차원 또는 2차원 넘파이 배열)
-    :param vocab_size: 어휘 수
-    :return: 원핫 표현(2차원 또는 3차원 넘파이 배열)
+    :param corpus: �떒�뼱 ID 紐⑸줉(1李⑥썝 �삉�뒗 2李⑥썝 �꽆�뙆�씠 諛곗뿴)
+    :param vocab_size: �뼱�쐶 �닔
+    :return: �썝�빂 �몴�쁽(2李⑥썝 �삉�뒗 3李⑥썝 �꽆�뙆�씠 諛곗뿴)
     '''
     N = corpus.shape[0]
 
@@ -97,12 +97,12 @@ def convert_one_hot(corpus, vocab_size):
 
 
 def create_co_matrix(corpus, vocab_size, window_size=1):
-    '''동시발생 행렬 생성
+    '''�룞�떆諛쒖깮 �뻾�젹 �깮�꽦
 
-    :param corpus: 말뭉치(단어 ID 목록)
-    :param vocab_size: 어휘 수
-    :param window_size: 윈도우 크기(윈도우 크기가 1이면 타깃 단어 좌우 한 단어씩이 맥락에 포함)
-    :return: 동시발생 행렬
+    :param corpus: 留먮춬移�(�떒�뼱 ID 紐⑸줉)
+    :param vocab_size: �뼱�쐶 �닔
+    :param window_size: �쐢�룄�슦 �겕湲�(�쐢�룄�슦 �겕湲곌�� 1�씠硫� ���源� �떒�뼱 醫뚯슦 �븳 �떒�뼱�뵫�씠 留λ씫�뿉 �룷�븿)
+    :return: �룞�떆諛쒖깮 �뻾�젹
     '''
     corpus_size = len(corpus)
     co_matrix = np.zeros((vocab_size, vocab_size), dtype=np.int32)
@@ -124,10 +124,10 @@ def create_co_matrix(corpus, vocab_size, window_size=1):
 
 
 def ppmi(C, verbose=False, eps = 1e-8):
-    '''PPMI(점별 상호정보량) 생성
+    '''PPMI(�젏蹂� �긽�샇�젙蹂대웾) �깮�꽦
 
-    :param C: 동시발생 행렬
-    :param verbose: 진행 상황을 출력할지 여부
+    :param C: �룞�떆諛쒖깮 �뻾�젹
+    :param verbose: 吏꾪뻾 �긽�솴�쓣 異쒕젰�븷吏� �뿬遺�
     :return:
     '''
     M = np.zeros_like(C, dtype=np.float32)
@@ -144,15 +144,15 @@ def ppmi(C, verbose=False, eps = 1e-8):
             if verbose:
                 cnt += 1
                 if cnt % (total//100) == 0:
-                    print('%.1f%% 완료' % (100*cnt/total))
+                    print('%.1f%% �셿猷�' % (100*cnt/total))
     return M
 
 
 def create_contexts_target(corpus, window_size=1):
-    '''맥락과 타깃 생성
+    '''留λ씫怨� ���源� �깮�꽦
 
-    :param corpus: 말뭉치(단어 ID 목록)
-    :param window_size: 윈도우 크기(윈도우 크기가 1이면 타깃 단어 좌우 한 단어씩이 맥락에 포함)
+    :param corpus: 留먮춬移�(�떒�뼱 ID 紐⑸줉)
+    :param window_size: �쐢�룄�슦 �겕湲�(�쐢�룄�슦 �겕湲곌�� 1�씠硫� ���源� �떒�뼱 醫뚯슦 �븳 �떒�뼱�뵫�씠 留λ씫�뿉 �룷�븿)
     :return:
     '''
     target = corpus[window_size:-window_size]
@@ -196,7 +196,7 @@ def clip_grads(grads, max_norm):
 
 
 def eval_perplexity(model, corpus, batch_size=10, time_size=35):
-    print('퍼플렉서티 평가 중 ...')
+    print('�띁�뵆�젆�꽌�떚 �룊媛� 以� ...')
     corpus_size = len(corpus)
     total_loss, loss_cnt = 0, 0
     max_iters = (corpus_size - 1) // (batch_size * time_size)
@@ -229,12 +229,12 @@ def eval_perplexity(model, corpus, batch_size=10, time_size=35):
 def eval_seq2seq(model, question, correct, id_to_char,
                  verbos=False, is_reverse=False):
     correct = correct.flatten()
-    # 머릿글자
+    # 癒몃┸湲��옄
     start_id = correct[0]
     correct = correct[1:]
     guess = model.generate(question, start_id, len(correct))
 
-    # 문자열로 변환
+    # 臾몄옄�뿴濡� 蹂��솚
     question = ''.join([id_to_char[int(c)] for c in question.flatten()])
     correct = ''.join([id_to_char[int(c)] for c in correct])
     guess = ''.join([id_to_char[int(c)] for c in guess])
@@ -250,12 +250,12 @@ def eval_seq2seq(model, question, correct, id_to_char,
         is_windows = os.name == 'nt'
 
         if correct == guess:
-            mark = colors['ok'] + '☑' + colors['close']
+            mark = colors['ok'] + '�삊' + colors['close']
             if is_windows:
                 mark = 'O'
             print(mark + ' ' + guess)
         else:
-            mark = colors['fail'] + '☒' + colors['close']
+            mark = colors['fail'] + '�삋' + colors['close']
             if is_windows:
                 mark = 'X'
             print(mark + ' ' + guess)
@@ -267,7 +267,7 @@ def eval_seq2seq(model, question, correct, id_to_char,
 def analogy(a, b, c, word_to_id, id_to_word, word_matrix, top=5, answer=None):
     for word in (a, b, c):
         if word not in word_to_id:
-            print('%s(을)를 찾을 수 없습니다.' % word)
+            print('%s(�쓣)瑜� 李얠쓣 �닔 �뾾�뒿�땲�떎.' % word)
             return
 
     print('\n[analogy] ' + a + ':' + b + ' = ' + c + ':?')
