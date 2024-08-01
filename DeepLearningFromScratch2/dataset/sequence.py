@@ -33,22 +33,22 @@ def load_data(file_name='addition.txt', seed=1984):
         questions.append(line[:idx])
         answers.append(line[idx:-1])
 
-    # ì–´íœ˜ ì‚¬ì „ ìƒì„±
+    # ?–´?œ˜ ?‚¬? „ ?ƒ?„±
     for i in range(len(questions)):
         q, a = questions[i], answers[i]
         _update_vocab(q)
         _update_vocab(a)
 
-    # ë„˜íŒŒì´ ë°°ì—´ ìƒì„±
-    x = numpy.zeros((len(questions), len(questions[0])), dtype=numpy.int)
-    t = numpy.zeros((len(questions), len(answers[0])), dtype=numpy.int)
+    # ?„˜?ŒŒ?´ ë°°ì—´ ?ƒ?„±
+    x = numpy.zeros((len(questions), len(questions[0])), dtype=numpy.int32)
+    t = numpy.zeros((len(questions), len(answers[0])), dtype=numpy.int32)
 
     for i, sentence in enumerate(questions):
         x[i] = [char_to_id[c] for c in list(sentence)]
     for i, sentence in enumerate(answers):
         t[i] = [char_to_id[c] for c in list(sentence)]
 
-    # ë’¤ì„ê¸°
+    # ?’¤?„ê¸?
     indices = numpy.arange(len(x))
     if seed is not None:
         numpy.random.seed(seed)
@@ -56,7 +56,7 @@ def load_data(file_name='addition.txt', seed=1984):
     x = x[indices]
     t = t[indices]
 
-    # ê²€ì¦ ë°ì´í„°ì…‹ìœ¼ë¡œ 10% í• ë‹¹
+    # ê²?ì¦? ?°?´?„°?…‹?œ¼ë¡? 10% ?• ?‹¹
     split_at = len(x) - len(x) // 10
     (x_train, x_test) = x[:split_at], x[split_at:]
     (t_train, t_test) = t[:split_at], t[split_at:]
