@@ -57,7 +57,7 @@ class Decoder:
             self.params += layer.params
             self.grads += layer.grads
         
-        def forward(self, xs, h):
+    def forward(self, xs, h):
             self.lstm.set_state(h)
 
             out = self.embed.forward(xs)
@@ -65,14 +65,14 @@ class Decoder:
             score = self.affine.forward(out)
             return score
         
-        def backward(self, dscore):
+    def backward(self, dscore):
             dout = self.affine.backward(dscore)
             dout = self.lstm.backward(dout)
             dout = self.embed.backward(dout)
             dh = self.lstm.dh
             return dh
         
-        def generate(self, h, start_id, sample_size):
+    def generate(self, h, start_id, sample_size):
             sampled = []
             sample_id = start_id
             self.lstm.set_state(h)
